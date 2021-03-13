@@ -1,15 +1,9 @@
 {
   "compilerOptions": {
-    "outDir": "./docs/",
-    "sourceMap": true,
-    "noImplicitAny": true,
-    "module": "es6",
-    "target": "es5",
-    "jsx": "react",
-    "allowJs": true,
-    "skipLibCheck": true
+    // leave other options without changes
+    "module": "es2015", // "es2015" makes Typescript compiler output compatible with Rollup
+    "declaration": true, // generates .d.ts files inside the output directory
+    // remaining options
   },
-  "include": [
-    "./src/**/*"
-  ]
+  "include":["src/**/*"] // Only files from ./src/ directory will be processed and generated folder structure will be relative to ./src/
 }

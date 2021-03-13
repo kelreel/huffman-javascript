@@ -20,7 +20,7 @@ npm run dev(or build)
 
 ## Usage
 
-<b>The algorithm implementation is in the file /src/huffman.ts</b>
+<b>The algorithm implementation is in the file /src/index.ts</b>
 
 Let's encode and decode plain text!
 

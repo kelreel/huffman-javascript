@@ -1,0 +1,5 @@
+build/*
+public/*
+dist/*
+*.d.ts
+.eslintrc.js
