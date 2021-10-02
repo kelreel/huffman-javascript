@@ -3,3 +3,5 @@ public/*
 dist/*
 *.d.ts
 .eslintrc.js
+.jest.config.js
+rollup.config.js

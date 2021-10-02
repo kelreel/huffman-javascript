@@ -58,7 +58,7 @@ module.exports = {
         '@typescript-eslint/no-empty-function': 0,
         '@typescript-eslint/ban-types': 1,
         '@typescript-eslint/ban-ts-comment': 1,
-        'no-use-before-define': 1,
+        'no-use-before-define': 0,
         'no-debugger': 1,
         'no-template-curly-in-string': 0,
         'import/extensions': [

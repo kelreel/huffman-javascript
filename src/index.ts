@@ -6,7 +6,7 @@ export interface TreeNode {
 
 /** ENCODE TEXT */
 export function encode(text: string, codes: Map<string, string>): Array<string> {
-    let result: Array<string> = [];
+    const result: Array<string> = [];
     for (let i = 0; i < text.length; i++) {
         result.push(codes.get(text[i]));
     }
@@ -15,8 +15,9 @@ export function encode(text: string, codes: Map<string, string>): Array<string> 
 
 /** DECODE TEXT */
 export function decode(text: Array<string>, codes: Map<string, string>): string {
-    let result: string = '';
+    let result = '';
     for (let i = 0; i < text.length; i++) {
+        // eslint-disable-next-line no-loop-func
         codes.forEach((code, symbol) => {
             if (text[i] === code) {
                 result += symbol;
@@ -28,8 +29,8 @@ export function decode(text: Array<string>, codes: Map<string, string>): string 
 
 /** GET ENTROPY */
 export function getEntropyOfText(text: string): number {
-    let relFreq: Array<any> = getRelativeFrequency(getFrequency(text));
-    let entropy: number = 0;
+    const relFreq: Array<any> = getRelativeFrequency(getFrequency(text));
+    let entropy = 0;
     for (let i = 0; i < relFreq.length; i++) {
         entropy += relFreq[i][1] * Math.log2(relFreq[i][1]);
     }
@@ -41,9 +42,9 @@ export function getCodesFromText(text: string): Map<string, string> {
     const frequencyArr = getFrequency(text);
     const symbols = frequencyArr.map((item) => item[0]);
 
-    let tree = getTree(frequencyArr);
+    const tree = getTree(frequencyArr);
 
-    let codes: Map<string, string> = new Map(); // Array with symbols and codes
+    const codes: Map<string, string> = new Map(); // Array with symbols and codes
     symbols.forEach((element) => {
         codes.set(element, getSymbolCode(tree, element));
     });
@@ -53,13 +54,13 @@ export function getCodesFromText(text: string): Map<string, string> {
 
 //** GET RELATIVE FREQUENCY */
 export function getRelativeFrequency(arr: Array<any>): Array<any> {
-    let length: number = 0;
-    let resArr: Array<any> = [];
+    let length = 0;
+    const resArr: Array<any> = [];
     for (let i = 0; i < arr.length; i++) {
         length += arr[i][1];
     }
     for (let i = 0; i < arr.length; i++) {
-        let relFreq = arr[i][1] / length;
+        const relFreq = arr[i][1] / length;
         resArr.push([arr[i][0], relFreq]);
     }
 
@@ -67,13 +68,12 @@ export function getRelativeFrequency(arr: Array<any>): Array<any> {
 }
 
 /** GET CODE FOR SYMBOL */
-function getSymbolCode(tree: TreeNode, symbol: string, code: string = ''): string {
+function getSymbolCode(tree: TreeNode, symbol: string, code = ''): string {
     let arr = [];
     if (typeof tree.leafs === undefined) {
         return code;
-    } else {
-        arr = tree.leafs;
     }
+    arr = tree.leafs;
 
     if (arr[0].symbols.length === 1 && arr[0].symbols[0] === symbol) return code + 0;
     if (arr[0].symbols.length === 1 && arr[0].symbols[0] !== symbol) {
@@ -97,10 +97,10 @@ function getSymbolCode(tree: TreeNode, symbol: string, code: string = ''): strin
 
 /** GET SYMBOLS FREQUENCY FROM TEXT */
 export function getFrequency(text: string): [string, number][] {
-    let freq: Map<string, number> = new Map();
+    const freq: Map<string, number> = new Map();
 
     for (let i = 0; i < text.length; i++) {
-        let counter: number = 0;
+        let counter = 0;
         for (let j = 0; j < text.length; j++) {
             if (!freq.has(text[i])) {
                 if (text[i] === text[j] && i !== j) {
@@ -117,18 +117,16 @@ export function getFrequency(text: string): [string, number][] {
 }
 
 /** GENERATE HUFFMAN TREE */
-export function getTree(arr: Array<any>) {
-    let tree: TreeNode;
+export function getTree(arr: Array<any>): TreeNode {
+    arr = arr.map((elem) => ({
+        symbols: [elem[0]],
+        weight: elem[1],
+        leafs: [],
+    }));
 
-    arr = arr.map((elem) => {
-        return {
-            symbols: [elem[0]],
-            weight: elem[1],
-            leafs: [],
-        };
-    });
-
-    let min1, min2, node: TreeNode;
+    let min1;
+    let min2;
+    let node: TreeNode;
 
     while (arr.length > 2) {
         min1 = searchMinWeightNode(arr);
@@ -140,26 +138,23 @@ export function getTree(arr: Array<any>) {
         arr.push(node);
     }
 
-    tree = createNode(arr[0], arr[1]);
-    return tree;
+    return createNode(arr[0], arr[1]);
 }
 
 /** CREATE TREE NODE FROM TWO NODES */
-function createNode(node1: TreeNode, node2: TreeNode): any {
-    let node: TreeNode;
-    let weight: number = node1.weight + node2.weight;
-    let symbols: Array<string> = node1.symbols.concat(node2.symbols);
-    let leafs: Array<TreeNode> = [node1, node2];
-    node = {
-        symbols: symbols,
-        weight: weight,
-        leafs: leafs,
+function createNode(node1: TreeNode, node2: TreeNode): TreeNode {
+    const weight: number = node1.weight + node2.weight;
+    const symbols: Array<string> = node1.symbols.concat(node2.symbols);
+    const leafs: Array<TreeNode> = [node1, node2];
+    return {
+        symbols,
+        weight,
+        leafs,
     };
-    return node;
 }
 
 /** SEARCH NODE WITH MINIMAL WEIGHT IN TREE */
-function searchMinWeightNode(arr: Array<any>, minNumber: number = -1): TreeNode {
+function searchMinWeightNode(arr: Array<any>, minNumber = -1): TreeNode {
     let min = 9999;
     let result: TreeNode;
     for (let i = 0; i < arr.length; i++) {
