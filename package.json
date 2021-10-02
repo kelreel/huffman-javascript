@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "scripts": {
-    "dev": "concurrently \"tsc --watch src/__run.ts --outDir ./temp\" \"nodemon ./temp/__run.js\"",
+    "dev": "concurrently \"tsc --watch src/__dev/__run.ts --outDir ./temp\" \"nodemon ./temp/__run.js\"",
     "build": "npx rollup -c",
     "lint": "eslint --ext .js,.ts, src --color",
     "format": "prettier --write \"src/**/*.{ts,tsx,scss,css,json}\" && eslint \"src/**/*.{scss,css,json}\" --fix"

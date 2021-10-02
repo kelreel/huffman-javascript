@@ -1,3 +1,7 @@
 .idea
 node_modules
+coverage
 temp
+src/__dev
+/dist/__dev/
+/dist/__run.d.ts
