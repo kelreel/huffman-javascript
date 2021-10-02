@@ -1,5 +1,11 @@
 {
   "name": "huffman-javascript",
+  "description": "Set of utilities for the huffman algorithm",
+  "keywords": [
+    "Huffman",
+    "Huffman algorithm",
+    "Data compression"
+  ],
   "version": "0.1.0",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -7,27 +13,44 @@
     "dev": "concurrently \"tsc --watch src/__dev/__run.ts --outDir ./temp\" \"nodemon ./temp/__run.js\"",
     "build": "npx rollup -c",
     "lint": "eslint --ext .js,.ts, src --color",
-    "format": "prettier --write \"src/**/*.{ts,tsx,scss,css,json}\" && eslint \"src/**/*.{scss,css,json}\" --fix"
+    "format": "prettier --write \"src/**/*.{js,ts,tsx,scss,css,json}\" --fix",
+    "release": "release-it"
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^14.14.34",
-    "@typescript-eslint/eslint-plugin": "^4.17.0",
-    "@typescript-eslint/parser": "^4.17.0",
-    "concurrently": "^6.0.0",
-    "eslint": "^7.22.0",
+    "@types/node": "^16.10.2",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
+    "concurrently": "^6.3.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.22.0",
-    "jest": "^26.6.3",
-    "nodemon": "^2.0.7",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "husky": "^7.0.2",
+    "jest": "^27.2.4",
+    "nodemon": "^2.0.13",
     "parcel-bundler": "^1.12.4",
-    "prettier": "^2.2.1",
-    "rollup": "^2.41.2",
+    "prettier": "^2.4.1",
+    "release-it": "^14.11.6",
+    "rollup": "^2.58.0",
     "rollup-plugin-typescript2": "^0.30.0",
-    "typescript": "^4.2.3"
+    "typescript": "^4.4.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.(js|jsx|ts|tsx)": [
+      "npm run format"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kelreel/huffman-javascript"
   }
 }

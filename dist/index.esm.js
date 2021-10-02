@@ -10,6 +10,7 @@ function encode(text, codes) {
 function decode(text, codes) {
     var result = '';
     var _loop_1 = function (i) {
+        // eslint-disable-next-line no-loop-func
         codes.forEach(function (code, symbol) {
             if (text[i] === code) {
                 result += symbol;
@@ -61,9 +62,7 @@ function getSymbolCode(tree, symbol, code) {
     if (typeof tree.leafs === undefined) {
         return code;
     }
-    else {
-        arr = tree.leafs;
-    }
+    arr = tree.leafs;
     if (arr[0].symbols.length === 1 && arr[0].symbols[0] === symbol)
         return code + 0;
     if (arr[0].symbols.length === 1 && arr[0].symbols[0] !== symbol) {
@@ -105,15 +104,14 @@ function getFrequency(text) {
 }
 /** GENERATE HUFFMAN TREE */
 function getTree(arr) {
-    var tree;
-    arr = arr.map(function (elem) {
-        return {
-            symbols: [elem[0]],
-            weight: elem[1],
-            leafs: [],
-        };
-    });
-    var min1, min2, node;
+    arr = arr.map(function (elem) { return ({
+        symbols: [elem[0]],
+        weight: elem[1],
+        leafs: [],
+    }); });
+    var min1;
+    var min2;
+    var node;
     while (arr.length > 2) {
         min1 = searchMinWeightNode(arr);
         arr.splice(arr.indexOf(min1), 1);
@@ -122,21 +120,18 @@ function getTree(arr) {
         node = createNode(min1, min2);
         arr.push(node);
     }
-    tree = createNode(arr[0], arr[1]);
-    return tree;
+    return createNode(arr[0], arr[1]);
 }
 /** CREATE TREE NODE FROM TWO NODES */
 function createNode(node1, node2) {
-    var node;
     var weight = node1.weight + node2.weight;
     var symbols = node1.symbols.concat(node2.symbols);
     var leafs = [node1, node2];
-    node = {
+    return {
         symbols: symbols,
         weight: weight,
         leafs: leafs,
     };
-    return node;
 }
 /** SEARCH NODE WITH MINIMAL WEIGHT IN TREE */
 function searchMinWeightNode(arr, minNumber) {
