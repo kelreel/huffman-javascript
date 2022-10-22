@@ -8,6 +8,7 @@ export interface TreeNode {
 export function encode(text: string, codes: Map<string, string>): Array<string> {
     const result: Array<string> = [];
     for (let i = 0; i < text.length; i++) {
+        // @ts-ignore
         result.push(codes.get(text[i]));
     }
     return result;
@@ -93,6 +94,8 @@ function getSymbolCode(tree: TreeNode, symbol: string, code = ''): string {
         return getSymbolCode(arr[0], symbol, code + 0);
     if (arr[1].symbols.length >= 2 && arr[1].symbols.includes(symbol))
         return getSymbolCode(arr[1], symbol, code + 1);
+
+    return (Math.random() + 1).toString(36).substring(4);
 }
 
 /** GET SYMBOLS FREQUENCY FROM TEXT */
@@ -163,5 +166,6 @@ function searchMinWeightNode(arr: Array<any>, minNumber = -1): TreeNode {
             result = arr[i];
         }
     }
+    // @ts-ignore
     return result;
 }

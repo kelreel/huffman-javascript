@@ -1,9 +1,18 @@
 {
-  "compilerOptions": {
-    // leave other options without changes
-    "module": "es2015", // "es2015" makes Typescript compiler output compatible with Rollup
-    "declaration": true, // generates .d.ts files inside the output directory
-    // remaining options
-  },
-  "include":["src/**/*"] // Only files from ./src/ directory will be processed and generated folder structure will be relative to ./src/
+    "compilerOptions": {
+        "lib": ["dom", "es2020"],
+        "target": "es2020",
+        "skipLibCheck": true,
+        "moduleResolution": "node",
+        "noEmit": true,
+        "resolveJsonModule": true,
+        "strict": true,
+        "noUnusedLocals": true,
+        "types": ["node", "jest"],
+        "allowJs": true,
+        "esModuleInterop": true,
+        "jsx": "react-jsx"
+    },
+    "include": ["src/**/*", "website/**/*"],
+    "esModuleInterop": true,
 }
