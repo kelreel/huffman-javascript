@@ -11,6 +11,7 @@ export function encode(text: string, codes: Map<string, string>): Array<string> 
         // @ts-ignore
         result.push(codes.get(text[i]));
     }
+
     return result;
 }
 
