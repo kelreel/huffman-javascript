@@ -1,7 +1,6 @@
-import {getCodesFromText} from "huffman-javascript";
+import {getCodesFromText} from 'huffman-javascript';
 
 export const App = (): JSX.Element => {
-    const x = getCodesFromText("abcccc")
-    console.log(x)
-    return <div>App</div>
-}
+    const codes = getCodesFromText('abcde aabc');
+    return <pre>{JSON.stringify(Array.from(codes.entries()), null, 2)}</pre>;
+};
