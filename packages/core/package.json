@@ -13,21 +13,9 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "lint": "eslint --ext .js,.ts, src --color",
-    "format": "prettier --write \"src/**/*.{js,ts,tsx,scss,css,json}\" --fix",
     "release": "release-it"
   },
   "license": "MIT",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.(js|jsx|ts|tsx)": [
-      "npm run format"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/kelreel/huffman-javascript"

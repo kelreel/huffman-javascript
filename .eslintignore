@@ -1,6 +1,8 @@
 build/*
 public/*
 dist/*
+docs/*
+packages/core/dist/*
 *.d.ts
 .eslintrc.js
 .jest.config.js
