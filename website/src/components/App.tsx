@@ -1,4 +1,4 @@
-import {getCodesFromText} from "../../src/index";
+import {getCodesFromText} from "huffman-javascript";
 
 export const App = (): JSX.Element => {
     const x = getCodesFromText("abcccc")

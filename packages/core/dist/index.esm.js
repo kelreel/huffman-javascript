@@ -1,7 +1,7 @@
 /** ENCODE TEXT */
 function encode(text, codes) {
-    const result = [];
-    for (let i = 0; i < text.length; i++) {
+    var result = [];
+    for (var i = 0; i < text.length; i++) {
         // @ts-ignore
         result.push(codes.get(text[i]));
     }
@@ -9,53 +9,57 @@ function encode(text, codes) {
 }
 /** DECODE TEXT */
 function decode(text, codes) {
-    let result = '';
-    for (let i = 0; i < text.length; i++) {
+    var result = '';
+    var _loop_1 = function (i) {
         // eslint-disable-next-line no-loop-func
-        codes.forEach((code, symbol) => {
+        codes.forEach(function (code, symbol) {
             if (text[i] === code) {
                 result += symbol;
             }
         });
+    };
+    for (var i = 0; i < text.length; i++) {
+        _loop_1(i);
     }
     return result;
 }
 /** GET ENTROPY */
 function getEntropyOfText(text) {
-    const relFreq = getRelativeFrequency(getFrequency(text));
-    let entropy = 0;
-    for (let i = 0; i < relFreq.length; i++) {
+    var relFreq = getRelativeFrequency(getFrequency(text));
+    var entropy = 0;
+    for (var i = 0; i < relFreq.length; i++) {
         entropy += relFreq[i][1] * Math.log2(relFreq[i][1]);
     }
     return -entropy;
 }
 /** GET SYMBOLS CODES FROM TEXT */
 function getCodesFromText(text) {
-    const frequencyArr = getFrequency(text);
-    const symbols = frequencyArr.map((item) => item[0]);
-    const tree = getTree(frequencyArr);
-    const codes = new Map(); // Array with symbols and codes
-    symbols.forEach((element) => {
+    var frequencyArr = getFrequency(text);
+    var symbols = frequencyArr.map(function (item) { return item[0]; });
+    var tree = getTree(frequencyArr);
+    var codes = new Map(); // Array with symbols and codes
+    symbols.forEach(function (element) {
         codes.set(element, getSymbolCode(tree, element));
     });
     return codes;
 }
 //** GET RELATIVE FREQUENCY */
 function getRelativeFrequency(arr) {
-    let length = 0;
-    const resArr = [];
-    for (let i = 0; i < arr.length; i++) {
+    var length = 0;
+    var resArr = [];
+    for (var i = 0; i < arr.length; i++) {
         length += arr[i][1];
     }
-    for (let i = 0; i < arr.length; i++) {
-        const relFreq = arr[i][1] / length;
+    for (var i = 0; i < arr.length; i++) {
+        var relFreq = arr[i][1] / length;
         resArr.push([arr[i][0], relFreq]);
     }
     return resArr;
 }
 /** GET CODE FOR SYMBOL */
-function getSymbolCode(tree, symbol, code = '') {
-    let arr = [];
+function getSymbolCode(tree, symbol, code) {
+    if (code === void 0) { code = ''; }
+    var arr = [];
     if (typeof tree.leafs === undefined) {
         return code;
     }
@@ -84,10 +88,10 @@ function getSymbolCode(tree, symbol, code = '') {
 }
 /** GET SYMBOLS FREQUENCY FROM TEXT */
 function getFrequency(text) {
-    const freq = new Map();
-    for (let i = 0; i < text.length; i++) {
-        let counter = 0;
-        for (let j = 0; j < text.length; j++) {
+    var freq = new Map();
+    for (var i = 0; i < text.length; i++) {
+        var counter = 0;
+        for (var j = 0; j < text.length; j++) {
             if (!freq.has(text[i])) {
                 if (text[i] === text[j] && i !== j) {
                     counter++;
@@ -98,18 +102,18 @@ function getFrequency(text) {
             freq.set(text[i], counter + 1);
         }
     }
-    return Array.from(freq).sort((a, b) => b[1] - a[1]); //Descending sort
+    return Array.from(freq).sort(function (a, b) { return b[1] - a[1]; }); //Descending sort
 }
 /** GENERATE HUFFMAN TREE */
 function getTree(arr) {
-    arr = arr.map((elem) => ({
+    arr = arr.map(function (elem) { return ({
         symbols: [elem[0]],
         weight: elem[1],
-        leafs: [],
-    }));
-    let min1;
-    let min2;
-    let node;
+        leafs: []
+    }); });
+    var min1;
+    var min2;
+    var node;
     while (arr.length > 2) {
         min1 = searchMinWeightNode(arr);
         arr.splice(arr.indexOf(min1), 1);
@@ -122,20 +126,21 @@ function getTree(arr) {
 }
 /** CREATE TREE NODE FROM TWO NODES */
 function createNode(node1, node2) {
-    const weight = node1.weight + node2.weight;
-    const symbols = node1.symbols.concat(node2.symbols);
-    const leafs = [node1, node2];
+    var weight = node1.weight + node2.weight;
+    var symbols = node1.symbols.concat(node2.symbols);
+    var leafs = [node1, node2];
     return {
-        symbols,
-        weight,
-        leafs,
+        symbols: symbols,
+        weight: weight,
+        leafs: leafs
     };
 }
 /** SEARCH NODE WITH MINIMAL WEIGHT IN TREE */
-function searchMinWeightNode(arr, minNumber = -1) {
-    let min = 9999;
-    let result;
-    for (let i = 0; i < arr.length; i++) {
+function searchMinWeightNode(arr, minNumber) {
+    if (minNumber === void 0) { minNumber = -1; }
+    var min = 9999;
+    var result;
+    for (var i = 0; i < arr.length; i++) {
         if (arr[i].weight <= min && arr[i].weight >= minNumber) {
             min = arr[i].weight;
             result = arr[i];

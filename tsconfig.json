@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "declaration": false,
         "lib": ["dom", "es2020"],
         "target": "es2020",
         "skipLibCheck": true,
@@ -13,6 +14,7 @@
         "esModuleInterop": true,
         "jsx": "react-jsx"
     },
-    "include": ["src/**/*", "website/**/*"],
-    "esModuleInterop": true,
+    "include": ["packages/**/*", "website/**/*"],
+    "exclude": ["node_modules"],
+    "esModuleInterop": true
 }
