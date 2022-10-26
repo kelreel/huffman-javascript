@@ -1,7 +1,10 @@
-<h1 align="center"><img height="150" src="./docs/logo.png" /><br>Huffman coding JS (TypeScript)</h1>
-<h2 align="center">
-  <a href="https://kelreel.github.io/huffman-javascript/">DEMO</a>
-</h2>
+<h1 align="center"><img height="150" src="assets/logo.png" /><br>Huffman coding JS (TypeScript)</h1>
+
+[//]: # (<h2 align="center">)
+
+[//]: # (  <a href="https://kelreel.github.io/huffman-javascript/">DEMO</a>)
+
+[//]: # (</h2>)
 
 Huffman code is a particular type of optimal prefix code that is commonly used for lossless data compression. This is the implementation of the algorithm on TypeScript.
   
@@ -16,7 +19,7 @@ npm install
 npm run dev(or build)
 ```
 
-![](./docs/split.png)
+![](assets/split.png)
 
 ## Usage
 
@@ -41,7 +44,7 @@ text = decode(encodedArray, codes); // Equals 'abracadabra'
 
 ```
 
-![](./docs/split.png)
+![](assets/split.png)
 
 ## APIs
 

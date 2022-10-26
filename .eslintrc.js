@@ -5,8 +5,8 @@ module.exports = {
         node: true,
     },
     parser: '@typescript-eslint/parser',
-    plugins: ['prettier', '@typescript-eslint', 'react-hooks'],
-    extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
+    extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
+    plugins: ['@typescript-eslint', 'react-hooks', 'prettier'],
     rules: {
         '@typescript-eslint/ban-ts-comment': 'off',
         '@typescript-eslint/no-explicit-any': 'off',

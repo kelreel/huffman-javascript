@@ -19,7 +19,6 @@ export function encode(text: string, codes: Map<string, string>): Array<string> 
 export function decode(text: Array<string>, codes: Map<string, string>): string {
     let result = '';
     for (let i = 0; i < text.length; i++) {
-        // eslint-disable-next-line no-loop-func
         codes.forEach((code, symbol) => {
             if (text[i] === code) {
                 result += symbol;
@@ -33,6 +32,7 @@ export function decode(text: Array<string>, codes: Map<string, string>): string 
 export function getEntropyOfText(text: string): number {
     const relFreq: Array<any> = getRelativeFrequency(getFrequency(text));
     let entropy = 0;
+
     for (let i = 0; i < relFreq.length; i++) {
         entropy += relFreq[i][1] * Math.log2(relFreq[i][1]);
     }

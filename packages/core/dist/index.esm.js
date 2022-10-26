@@ -11,7 +11,6 @@ function encode(text, codes) {
 function decode(text, codes) {
     let result = '';
     for (let i = 0; i < text.length; i++) {
-        // eslint-disable-next-line no-loop-func
         codes.forEach((code, symbol) => {
             if (text[i] === code) {
                 result += symbol;

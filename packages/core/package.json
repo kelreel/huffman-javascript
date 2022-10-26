@@ -1,23 +1,26 @@
 {
-  "name": "huffman-javascript",
-  "description": "Set of utilities for the huffman algorithm",
-  "keywords": [
-    "Huffman",
-    "Huffman algorithm",
-    "Data compression"
-  ],
-  "version": "0.1.2",
-  "main": "dist/index.js",
-  "module": "dist/index.esm.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "release": "release-it"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kelreel/huffman-javascript"
-  }
+    "name": "huffman-javascript",
+    "description": "Set of utilities for the huffman algorithm",
+    "keywords": [
+        "Huffman",
+        "Huffman algorithm",
+        "Data compression"
+    ],
+    "version": "0.1.2",
+    "files": [
+        "dist"
+    ],
+    "main": "dist/index.js",
+    "module": "dist/index.esm.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "release": "release-it"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kelreel/huffman-javascript"
+    }
 }

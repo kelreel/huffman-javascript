@@ -1,13 +1,13 @@
 {
-  "pipeline": {
-    "dev": {
-      "cache": false
-    },
-    "build": {
-      "outputs": ["dist/**"]
-    },
-    "lint": {
-      "outputs": []
+    "pipeline": {
+        "dev": {
+            "cache": false
+        },
+        "build": {
+            "outputs": ["dist/**"]
+        },
+        "lint": {
+            "outputs": []
+        }
     }
-  }
 }

@@ -18,7 +18,7 @@ describe('Check Encode/decode', () => {
     // });
 
     it('1234', () => {
-        const text = '1234';
+        const text = '1234123121';
         const codes = getCodesFromText(text);
         const encoded = encode(text, codes);
         const decoded = decode(encoded, codes);
