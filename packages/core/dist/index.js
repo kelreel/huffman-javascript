@@ -3,21 +3,20 @@
 /** ENCODE TEXT */
 function encode(text, codes) {
     const result = [];
-    for (let i = 0; i < text.length; i++) {
-        // @ts-ignore
-        result.push(codes.get(text[i]));
+    for (const char of text) {
+        result.push(codes.get(char));
     }
     return result;
 }
 /** DECODE TEXT */
-function decode(text, codes) {
+function decode(encodedText, codes) {
     let result = '';
-    for (let i = 0; i < text.length; i++) {
-        codes.forEach((code, symbol) => {
-            if (text[i] === code) {
-                result += symbol;
-            }
-        });
+    const reversedCodes = {};
+    Array.from(codes.entries()).forEach(([key, value]) => {
+        reversedCodes[value] = key;
+    });
+    for (const code of encodedText) {
+        result += reversedCodes[code];
     }
     return result;
 }

@@ -8,24 +8,26 @@ export interface TreeNode {
 /** ENCODE TEXT */
 export function encode(text: string, codes: Map<string, string>): Array<string> {
     const result: Array<string> = [];
-    for (let i = 0; i < text.length; i++) {
-        // @ts-ignore
-        result.push(codes.get(text[i]));
+    for (const char of text) {
+        result.push(codes.get(char)!);
     }
 
     return result;
 }
 
 /** DECODE TEXT */
-export function decode(text: Array<string>, codes: Map<string, string>): string {
+export function decode(encodedText: Array<string>, codes: Map<string, string>): string {
     let result = '';
-    for (let i = 0; i < text.length; i++) {
-        codes.forEach((code, symbol) => {
-            if (text[i] === code) {
-                result += symbol;
-            }
-        });
+
+    const reversedCodes: Record<string, string> = {};
+    Array.from(codes.entries()).forEach(([key, value]) => {
+        reversedCodes[value] = key;
+    });
+
+    for (const code of encodedText) {
+        result += reversedCodes[code];
     }
+
     return result;
 }
 

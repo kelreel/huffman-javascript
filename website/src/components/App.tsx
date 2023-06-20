@@ -7,9 +7,10 @@ import {
 } from 'huffman-javascript';
 
 export const App = (): JSX.Element => {
-    const text = 'aaaabbbccd';
+    const text = 'abracadabra';
+
+    console.time('1');
     const codes = getCharCodesFromSource(text);
-    // return <pre>{JSON.stringify(Array.from(codes.entries()), null, 2)}</pre>;
 
     const freq = getCharsFrequency(text);
     const tree = getTree(freq);
@@ -23,12 +24,13 @@ export const App = (): JSX.Element => {
     console.log(`encoded`, encoded);
     console.log(`decoded`, decoded);
 
+    console.timeEnd('1');
+
     return (
         <div>
             <pre>{JSON.stringify(tree, null, 2)}</pre>
             <br />
             <pre>Encoded: {encoded}</pre>
-            <br />
             <pre>Decoded: {decoded}</pre>
         </div>
     );

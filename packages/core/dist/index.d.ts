@@ -7,7 +7,7 @@ export interface TreeNode {
 /** ENCODE TEXT */
 export declare function encode(text: string, codes: Map<string, string>): Array<string>;
 /** DECODE TEXT */
-export declare function decode(text: Array<string>, codes: Map<string, string>): string;
+export declare function decode(encodedText: Array<string>, codes: Map<string, string>): string;
 /** GET ENTROPY */
 export declare function getEntropyOfText(text: string): number;
 /** Create char-to-code Map */
