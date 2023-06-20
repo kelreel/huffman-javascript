@@ -1,9 +1,9 @@
-import {encode, decode, getCodesFromText} from '../src';
+import {encode, decode, getCharCodesFromSource} from '../src';
 
 describe('Check Encode/decode', () => {
     it('abra', () => {
         const text = 'abra';
-        const codes = getCodesFromText(text);
+        const codes = getCharCodesFromSource(text);
         const encoded = encode(text, codes);
         const decoded = decode(encoded, codes);
         expect(decoded).toEqual(text);
@@ -19,7 +19,7 @@ describe('Check Encode/decode', () => {
 
     it('1234', () => {
         const text = '1234123121';
-        const codes = getCodesFromText(text);
+        const codes = getCharCodesFromSource(text);
         const encoded = encode(text, codes);
         const decoded = decode(encoded, codes);
         expect(decoded).toEqual(text);

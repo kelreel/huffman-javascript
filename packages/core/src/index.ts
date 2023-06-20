@@ -1,7 +1,8 @@
 export interface TreeNode {
-    symbols: Array<string>;
+    char: string;
     weight: number;
-    leafs: Array<TreeNode>;
+    left: TreeNode | null;
+    right: TreeNode | null;
 }
 
 /** ENCODE TEXT */
@@ -30,7 +31,7 @@ export function decode(text: Array<string>, codes: Map<string, string>): string 
 
 /** GET ENTROPY */
 export function getEntropyOfText(text: string): number {
-    const relFreq: Array<any> = getRelativeFrequency(getFrequency(text));
+    const relFreq: Array<any> = getRelativeFrequency(getCharsFrequency(text));
     let entropy = 0;
 
     for (let i = 0; i < relFreq.length; i++) {
@@ -39,22 +40,38 @@ export function getEntropyOfText(text: string): number {
     return -entropy;
 }
 
-/** GET SYMBOLS CODES FROM TEXT */
-export function getCodesFromText(text: string): Map<string, string> {
-    const frequencyArr = getFrequency(text);
-    const symbols = frequencyArr.map((item) => item[0]);
-
-    const tree = getTree(frequencyArr);
+/** Create char-to-code Map */
+export function getCharCodesFromSource(text: string): Map<string, string> {
+    const freqArr = getCharsFrequency(text);
+    const tree = getTree(freqArr);
 
     const codes: Map<string, string> = new Map(); // Array with symbols and codes
-    symbols.forEach((element) => {
-        codes.set(element, getSymbolCode(tree, element));
-    });
 
+    getCodes(tree, (char, code) => {
+        codes.set(char, code);
+    });
     return codes;
 }
 
-//** GET RELATIVE FREQUENCY */
+const getCodes = (
+    tree: TreeNode | null,
+    cb: (char: string, code: string) => void,
+    code = '',
+): void => {
+    if (!tree) {
+        return;
+    }
+
+    if (!tree.left && !tree.right) {
+        cb(tree.char, code);
+        return;
+    }
+
+    getCodes(tree.left, cb, code + '0');
+    getCodes(tree.right, cb, code + '1');
+};
+
+/** Relative frequency */
 export function getRelativeFrequency(arr: Array<any>): Array<any> {
     let length = 0;
     const resArr: Array<any> = [];
@@ -69,104 +86,36 @@ export function getRelativeFrequency(arr: Array<any>): Array<any> {
     return resArr;
 }
 
-/** GET CODE FOR SYMBOL */
-function getSymbolCode(tree: TreeNode, symbol: string, code = ''): string {
-    let arr = [];
-    if (typeof tree.leafs === undefined) {
-        return code;
-    }
-    arr = tree.leafs;
-
-    if (arr[0].symbols.length === 1 && arr[0].symbols[0] === symbol) return code + 0;
-    if (arr[0].symbols.length === 1 && arr[0].symbols[0] !== symbol) {
-        if (arr[1].symbols.length === 1 && arr[1].symbols[0] === symbol) return code + 1;
-        if (arr[1].symbols.includes(symbol) === true)
-            return getSymbolCode(arr[1], symbol, code + 1);
-    }
-
-    if (arr[1].symbols.length === 1 && arr[1].symbols[0] === symbol) return code + 1;
-    if (arr[1].symbols.length === 1 && arr[1].symbols[0] !== symbol) {
-        if (arr[0].symbols.length === 1 && arr[0].symbols[0] === symbol) return code + 0;
-        if (arr[0].symbols.includes(symbol) === true)
-            return getSymbolCode(arr[0], symbol, code + 0);
-    }
-
-    if (arr[0].symbols.length >= 2 && arr[0].symbols.includes(symbol))
-        return getSymbolCode(arr[0], symbol, code + 0);
-    if (arr[1].symbols.length >= 2 && arr[1].symbols.includes(symbol))
-        return getSymbolCode(arr[1], symbol, code + 1);
-
-    return (Math.random() + 1).toString(36).substring(4);
-}
-
-/** GET SYMBOLS FREQUENCY FROM TEXT */
-export function getFrequency(text: string): [string, number][] {
+/** Calculate chars frequency */
+export function getCharsFrequency(text: string): [string, number][] {
     const freq: Map<string, number> = new Map();
 
-    for (let i = 0; i < text.length; i++) {
-        let counter = 0;
-        for (let j = 0; j < text.length; j++) {
-            if (!freq.has(text[i])) {
-                if (text[i] === text[j] && i !== j) {
-                    counter++;
-                }
-            }
-        }
-        if (!freq.has(text[i])) {
-            freq.set(text[i], counter + 1);
-        }
+    for (const char of text) {
+        const count = freq.get(char);
+        freq.set(char, count ? count + 1 : 1);
     }
 
-    return Array.from(freq).sort((a, b) => b[1] - a[1]); //Descending sort
+    return Array.from(freq).sort((a, b) => b[1] - a[1]); // descending
 }
 
-/** GENERATE HUFFMAN TREE */
-export function getTree(arr: Array<any>): TreeNode {
-    arr = arr.map((elem) => ({
-        symbols: [elem[0]],
-        weight: elem[1],
-        leafs: [],
-    }));
+/** Generate Huffman tree */
+export function getTree(freq: [string, number][]): TreeNode {
+    const nodes: TreeNode[] = [];
 
-    let min1;
-    let min2;
-    let node: TreeNode;
-
-    while (arr.length > 2) {
-        min1 = searchMinWeightNode(arr);
-        arr.splice(arr.indexOf(min1), 1);
-        min2 = searchMinWeightNode(arr);
-        arr.splice(arr.indexOf(min2), 1);
-
-        node = createNode(min1, min2);
-        arr.push(node);
+    for (const [char, weight] of freq) {
+        nodes.push({char, weight, left: null, right: null});
     }
 
-    return createNode(arr[0], arr[1]);
-}
+    while (nodes.length > 1) {
+        nodes.sort((a, b) => a.weight - b.weight);
 
-/** CREATE TREE NODE FROM TWO NODES */
-function createNode(node1: TreeNode, node2: TreeNode): TreeNode {
-    const weight: number = node1.weight + node2.weight;
-    const symbols: Array<string> = node1.symbols.concat(node2.symbols);
-    const leafs: Array<TreeNode> = [node1, node2];
-    return {
-        symbols,
-        weight,
-        leafs,
-    };
-}
+        const left = nodes.shift()!;
+        const right = nodes.shift()!;
 
-/** SEARCH NODE WITH MINIMAL WEIGHT IN TREE */
-function searchMinWeightNode(arr: Array<any>, minNumber = -1): TreeNode {
-    let min = 9999;
-    let result: TreeNode;
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i].weight <= min && arr[i].weight >= minNumber) {
-            min = arr[i].weight;
-            result = arr[i];
-        }
+        const parent: TreeNode = {char: '', weight: left?.weight + right?.weight, left, right};
+
+        nodes.push(parent);
     }
-    // @ts-ignore
-    return result;
+
+    return nodes[0];
 }

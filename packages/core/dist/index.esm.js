@@ -21,25 +21,35 @@ function decode(text, codes) {
 }
 /** GET ENTROPY */
 function getEntropyOfText(text) {
-    const relFreq = getRelativeFrequency(getFrequency(text));
+    const relFreq = getRelativeFrequency(getCharsFrequency(text));
     let entropy = 0;
     for (let i = 0; i < relFreq.length; i++) {
         entropy += relFreq[i][1] * Math.log2(relFreq[i][1]);
     }
     return -entropy;
 }
-/** GET SYMBOLS CODES FROM TEXT */
-function getCodesFromText(text) {
-    const frequencyArr = getFrequency(text);
-    const symbols = frequencyArr.map((item) => item[0]);
-    const tree = getTree(frequencyArr);
+/** Create char-to-code Map */
+function getCharCodesFromSource(text) {
+    const freqArr = getCharsFrequency(text);
+    const tree = getTree(freqArr);
     const codes = new Map(); // Array with symbols and codes
-    symbols.forEach((element) => {
-        codes.set(element, getSymbolCode(tree, element));
+    getCodes(tree, (char, code) => {
+        codes.set(char, code);
     });
     return codes;
 }
-//** GET RELATIVE FREQUENCY */
+const getCodes = (tree, cb, code = '') => {
+    if (!tree) {
+        return;
+    }
+    if (!tree.left && !tree.right) {
+        cb(tree.char, code);
+        return;
+    }
+    getCodes(tree.left, cb, code + '0');
+    getCodes(tree.right, cb, code + '1');
+};
+/** Relative frequency */
 function getRelativeFrequency(arr) {
     let length = 0;
     const resArr = [];
@@ -52,97 +62,30 @@ function getRelativeFrequency(arr) {
     }
     return resArr;
 }
-/** GET CODE FOR SYMBOL */
-function getSymbolCode(tree, symbol, code = '') {
-    let arr = [];
-    if (typeof tree.leafs === undefined) {
-        return code;
-    }
-    arr = tree.leafs;
-    if (arr[0].symbols.length === 1 && arr[0].symbols[0] === symbol)
-        return code + 0;
-    if (arr[0].symbols.length === 1 && arr[0].symbols[0] !== symbol) {
-        if (arr[1].symbols.length === 1 && arr[1].symbols[0] === symbol)
-            return code + 1;
-        if (arr[1].symbols.includes(symbol) === true)
-            return getSymbolCode(arr[1], symbol, code + 1);
-    }
-    if (arr[1].symbols.length === 1 && arr[1].symbols[0] === symbol)
-        return code + 1;
-    if (arr[1].symbols.length === 1 && arr[1].symbols[0] !== symbol) {
-        if (arr[0].symbols.length === 1 && arr[0].symbols[0] === symbol)
-            return code + 0;
-        if (arr[0].symbols.includes(symbol) === true)
-            return getSymbolCode(arr[0], symbol, code + 0);
-    }
-    if (arr[0].symbols.length >= 2 && arr[0].symbols.includes(symbol))
-        return getSymbolCode(arr[0], symbol, code + 0);
-    if (arr[1].symbols.length >= 2 && arr[1].symbols.includes(symbol))
-        return getSymbolCode(arr[1], symbol, code + 1);
-    return (Math.random() + 1).toString(36).substring(4);
-}
-/** GET SYMBOLS FREQUENCY FROM TEXT */
-function getFrequency(text) {
+/** Calculate chars frequency */
+function getCharsFrequency(text) {
     const freq = new Map();
-    for (let i = 0; i < text.length; i++) {
-        let counter = 0;
-        for (let j = 0; j < text.length; j++) {
-            if (!freq.has(text[i])) {
-                if (text[i] === text[j] && i !== j) {
-                    counter++;
-                }
-            }
-        }
-        if (!freq.has(text[i])) {
-            freq.set(text[i], counter + 1);
-        }
+    for (const char of text) {
+        const count = freq.get(char);
+        freq.set(char, count ? count + 1 : 1);
     }
-    return Array.from(freq).sort((a, b) => b[1] - a[1]); //Descending sort
+    return Array.from(freq).sort((a, b) => b[1] - a[1]); // descending
 }
-/** GENERATE HUFFMAN TREE */
-function getTree(arr) {
-    arr = arr.map((elem) => ({
-        symbols: [elem[0]],
-        weight: elem[1],
-        leafs: [],
-    }));
-    let min1;
-    let min2;
-    let node;
-    while (arr.length > 2) {
-        min1 = searchMinWeightNode(arr);
-        arr.splice(arr.indexOf(min1), 1);
-        min2 = searchMinWeightNode(arr);
-        arr.splice(arr.indexOf(min2), 1);
-        node = createNode(min1, min2);
-        arr.push(node);
+/** Generate Huffman tree */
+function getTree(freq) {
+    const nodes = [];
+    for (const [char, weight] of freq) {
+        nodes.push({ char, weight, left: null, right: null });
     }
-    return createNode(arr[0], arr[1]);
-}
-/** CREATE TREE NODE FROM TWO NODES */
-function createNode(node1, node2) {
-    const weight = node1.weight + node2.weight;
-    const symbols = node1.symbols.concat(node2.symbols);
-    const leafs = [node1, node2];
-    return {
-        symbols,
-        weight,
-        leafs,
-    };
-}
-/** SEARCH NODE WITH MINIMAL WEIGHT IN TREE */
-function searchMinWeightNode(arr, minNumber = -1) {
-    let min = 9999;
-    let result;
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i].weight <= min && arr[i].weight >= minNumber) {
-            min = arr[i].weight;
-            result = arr[i];
-        }
+    while (nodes.length > 1) {
+        nodes.sort((a, b) => a.weight - b.weight);
+        const left = nodes.shift();
+        const right = nodes.shift();
+        const parent = { char: '', weight: left?.weight + right?.weight, left, right };
+        nodes.push(parent);
     }
-    // @ts-ignore
-    return result;
+    return nodes[0];
 }
 
-export { decode, encode, getCodesFromText, getEntropyOfText, getFrequency, getRelativeFrequency, getTree };
+export { decode, encode, getCharCodesFromSource, getCharsFrequency, getEntropyOfText, getRelativeFrequency, getTree };
 //# sourceMappingURL=index.esm.js.map
